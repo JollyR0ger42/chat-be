@@ -3,6 +3,14 @@ const express = require('express')
 const cors = require('cors')
 const cookieParser = require('cookie-parser')
 const jwt = require('jsonwebtoken')
+const dbConnect = require('./db/mongodb.js')
+
+dbConnect().then(client => {
+  const adminDb = client.db().admin()
+  adminDb.listDatabases(function(err, result) {
+    console.log(result.databases)
+  })
+}).catch(console.error)
 
 const port = process.env.PORT || 3000
 const corsOptions = {
