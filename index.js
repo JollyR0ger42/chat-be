@@ -2,6 +2,7 @@ require('dotenv').config()
 const express = require('express')
 const cors = require('cors')
 const cookieParser = require('cookie-parser')
+const jwt = require('jsonwebtoken')
 
 const port = process.env.PORT || 3000
 const corsOptions = {
@@ -16,15 +17,26 @@ app.use(cors(corsOptions))
 app.use(cookieParser())
 app.use(express.json())
 
+function generateToken (target) {
+  return jwt.sign(target, process.env.JWT_SECRET, {expiresIn: '1800s'})
+}
+
+function authRequired (req, res, next) {
+  const token = req.cookies?.token
+  const target = jwt.verify(token, process.env.JWT_SECRET)
+  console.log('authRequired', target)
+  next()
+}
+
 app.get('/', (req, res) => {
   res.send('Hello World!')
 })
 
-app.post('/', (req, res) => {
+app.post('/', authRequired, (req, res) => {
   console.log('----')
   console.log('Cookies:', req.cookies)
   console.log('POST', req.body)
-  res.append('Set-Cookie', 'token=foobar; HttpOnly;')
+  res.append('Set-Cookie', `token=${generateToken(req.body)}; HttpOnly;`)
   res.send()
 })
 
