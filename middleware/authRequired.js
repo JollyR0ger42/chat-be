@@ -4,7 +4,7 @@ module.exports = (req, res, next) => {
   const target = req.cookies?.token
   try {
     const user = token.verify(target)
-    console.log('Auth:', user)
+    req.user = user
   } catch (e) {
     console.log(e)
   }
