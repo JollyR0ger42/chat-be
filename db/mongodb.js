@@ -13,7 +13,7 @@ async function dbConnect() {
   console.log('Connected successfully to server')
   const db = client.db(dbName)
   const users = db.collection('users')
-  return client
+  return { db, users }
 }
 
 module.exports = dbConnect
