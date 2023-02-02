@@ -1,7 +1,7 @@
 const jwt = require('jsonwebtoken')
 
 function generate (target) {
-  return jwt.sign(target, process.env.JWT_SECRET, {expiresIn: '1800s'})
+  return jwt.sign(target, process.env.JWT_SECRET, {expiresIn: '7d'})
 }
 
 function verify (target) {
