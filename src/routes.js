@@ -1,5 +1,4 @@
 const authRequired = require('../middleware/authRequired.js')
-const token = require('./token.js')
 const { addUser } = require('../controller')
 
 module.exports = (app) => {
@@ -7,12 +6,12 @@ module.exports = (app) => {
     res.send('Hello World!')
   })
 
-  app.post('/', authRequired, async (req, res) => {
+  app.post('/', async (req, res) => {
     console.log('----')
     // console.log('Cookies:', req.cookies)
     console.log('POST', req.body)
-    await addUser(req.body.name, req.body.password)
-    res.append('Set-Cookie', `token=${token.generate(req.body)}; HttpOnly;`)
+    const token = await addUser(req.body.login, req.body.password)
+    res.append('Set-Cookie', `token=${token}; HttpOnly;`)
     res.send()
   })
 }

@@ -1,10 +1,10 @@
 const token = require('../src/token.js')
 
 module.exports = (req, res, next) => {
-  const token = req.cookies?.token
+  const target = req.cookies?.token
   try {
-    const target = token.verify(token)
-    // console.log('Auth:', target)
+    const user = token.verify(target)
+    console.log('Auth:', user)
   } catch (e) {
     console.log(e)
   }
