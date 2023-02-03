@@ -17,10 +17,8 @@ module.exports = (req, res, next) => {
     const newToken = token.generate({ login: user.login })
     res.append('Set-Cookie', `token=${newToken}; HttpOnly;`)
     res.send()
-    console.log('old', target)
-    console.log('new', newToken)
   }
 
-  req.user = user
+  req.user = {login: user.login}
   next()
 }
