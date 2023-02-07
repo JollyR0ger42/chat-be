@@ -13,5 +13,8 @@ function wrapper(func, args) {
 }
 
 module.exports = {
-  addUser: function (login, password) { return wrapper(users.addUser, arguments) }
+  User: {
+    addUser: function (login, password) { return wrapper(users.addUser, arguments) },
+    getUser: function (login, password) { return wrapper(users.getUser, arguments) }
+  }
 }

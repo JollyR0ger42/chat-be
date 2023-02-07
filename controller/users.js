@@ -1,18 +1,24 @@
-const token = require('../src/token.js')
-
 module.exports = (collection) => {
   async function addUser(login, password) {
-    let result
+    let newUser
 
-    try {
-      result = await collection.insertOne({ login, password })
-    } catch (e) {
-      console.log(e)
-    }
+    try { newUser = await collection.insertOne({ login, password }) }
+    catch (e) { console.log(e) }
 
-    if (result)
-      return token.generate({ login })
+    if (newUser) return { login }
+    else return false
   }
 
-  return { addUser }
+  async function getUser(login, password) {
+    let user
+
+    try { user = await collection.findOne({ login, password }) }
+    catch (e) { console.log(e) }
+    return user
+  }
+
+  return {
+    addUser,
+    getUser
+  }
 }
