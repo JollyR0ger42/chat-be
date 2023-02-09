@@ -14,13 +14,28 @@ module.exports = (app) => {
       const token = Token.generate(user)
       if (token) {
         res.append('Set-Cookie', `token=${token}; HttpOnly;`)
-        res.send()
+        res.send({login: user.login})
       }
     }
   })
 
   app.post('/login', async (req, res) => {
     const user = await User.getUser(req.body.login, req.body.password)
-    res.send(user)
+    if (user) {
+      const token = Token.generate(user)
+      if (token) {
+        res.append('Set-Cookie', `token=${token}; HttpOnly;`)
+        res.send({login: user.login})
+      }
+    }
+  })
+
+  app.get('/chats', authRequired, (req, res) => {
+    res.send(['chat1', 'chat2', 'chat3'])
+  })
+
+  app.get('/logout', (req, res) => {
+    res.append('Set-Cookie', `token=-; HttpOnly;`)
+    res.send()
   })
 }

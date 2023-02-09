@@ -7,7 +7,7 @@ module.exports = (req, res, next) => {
   try { user = token.verify(target) }
   catch (e) {
     console.log(e)
-    next()
+    res.status(401).send({body: 'Unauthorized'})
   }
 
   const createdAt = user.iat * 1000 // token has it in seconds
