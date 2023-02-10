@@ -1,5 +1,5 @@
 const authRequired = require('../middleware/authRequired.js')
-const { Users } = require('../controller')
+const { Users, Messages } = require('../controller')
 const Token = require('../src/token.js')
 
 
@@ -20,13 +20,11 @@ module.exports = (app) => {
   })
 
   app.post('/login', async (req, res) => {
-    const user = await User.getUser(req.body.login, req.body.password)
+    const user = await Users.getUser(req.body.login, req.body.password)
     if (user) {
       const token = Token.generate(user)
-      if (token) {
-        res.append('Set-Cookie', `token=${token}; HttpOnly;`)
-        res.send({login: user.login})
-      }
+      res.append('Set-Cookie', `token=${token}; HttpOnly;`)
+      res.send({login: user.login})
     }
   })
 
@@ -37,5 +35,11 @@ module.exports = (app) => {
   app.get('/logout', (req, res) => {
     res.append('Set-Cookie', `token=-; HttpOnly;`)
     res.send()
+  })
+
+  app.post('/messages', authRequired, (req, res) => {
+    Messages.addMessage({
+      ...req.body,
+    })
   })
 }

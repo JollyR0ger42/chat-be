@@ -1,16 +1,23 @@
 const token = require('../src/token.js')
+const { Users } = require('../controller')
 
-module.exports = (req, res, next) => {
+module.exports = async (req, res, next) => {
   const target = req.cookies?.token
-  let user
+  let user, iat
 
-  try { user = token.verify(target) }
+  try {
+    user = token.verify(target)
+    iat = user.iat
+    user = await Users.getUser(user.login, user.password)
+  }
   catch (e) {
     console.log(e)
-    res.status(401).send({body: 'Unauthorized'})
+    const err = new Error('Unauthorized')
+    err.status = 401
+    return next(err)
   }
 
-  const createdAt = user.iat * 1000 // token has it in seconds
+  const createdAt = iat * 1000 // token has it in seconds
   let timePass = new Date() - createdAt
   timePass = timePass / 1000 / 60 / 60 // in hours
   if (timePass >= 24) {
@@ -19,6 +26,6 @@ module.exports = (req, res, next) => {
     res.send()
   }
 
-  req.user = {login: user.login}
-  next()
+  req.user = { ...user, password: '' }
+  return next()
 }
