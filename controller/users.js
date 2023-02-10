@@ -9,10 +9,10 @@ module.exports = (collection) => {
     else return false
   }
 
-  async function getUser(login, password) {
+  async function getUser(login) {
     let user
 
-    try { user = await collection.findOne({ login, password }) }
+    try { user = await collection.findOne({ login }) }
     catch (e) { console.log(e) }
     return user
   }

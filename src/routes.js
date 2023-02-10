@@ -20,11 +20,13 @@ module.exports = (app) => {
   })
 
   app.post('/login', async (req, res) => {
-    const user = await Users.getUser(req.body.login, req.body.password)
-    if (user) {
+    const user = await Users.getUser(req.body.login)
+    if (user?.password === req.body.password) {
       const token = Token.generate(user)
       res.append('Set-Cookie', `token=${token}; HttpOnly;`)
       res.send({login: user.login})
+    } else {
+      res.status(401).send({Error: 'Unauthorized'})
     }
   })
 
