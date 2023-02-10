@@ -12,10 +12,8 @@ module.exports = (app) => {
     const user = await Users.addUser(req.body.login, req.body.password)
     if (user) {
       const token = Token.generate(user)
-      if (token) {
-        res.append('Set-Cookie', `token=${token}; HttpOnly;`)
-        res.send({login: user.login})
-      }
+      res.append('Set-Cookie', `token=${token}; HttpOnly;`)
+      res.send({login: user.login})
     }
   })
 
