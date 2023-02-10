@@ -21,5 +21,6 @@ module.exports = {
   },
   Messages: {
     addMessage:  function (payload) { return wrapper(messages.addMessage, arguments) },
+    getChat:  function (payload) { return wrapper(messages.getChat, arguments) },
   }
 }

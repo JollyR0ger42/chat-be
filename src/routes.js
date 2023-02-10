@@ -13,7 +13,7 @@ module.exports = (app) => {
     if (user) {
       const token = Token.generate(user)
       res.append('Set-Cookie', `token=${token}; HttpOnly;`)
-      res.send({login: user.login})
+      res.send({ login: user.login })
     }
   })
 
@@ -22,9 +22,9 @@ module.exports = (app) => {
     if (user?.password === req.body.password) {
       const token = Token.generate(user)
       res.append('Set-Cookie', `token=${token}; HttpOnly;`)
-      res.send({login: user.login})
+      res.send({ login: user.login })
     } else {
-      res.status(401).send({Error: 'Unauthorized'})
+      res.status(401).send({ Error: 'Unauthorized' })
     }
   })
 
@@ -37,9 +37,22 @@ module.exports = (app) => {
     res.send()
   })
 
-  app.post('/messages', authRequired, (req, res) => {
+  app.post('/messages', authRequired, async (req, res) => {
+    const receiver = await Users.getUser(req.body.receiver)
     Messages.addMessage({
-      ...req.body,
+      message: req.body.message,
+      receiver: receiver.login,
+      sender: req.user.login
     })
+    res.send()
+  })
+
+  app.get('/messages/:receiver', authRequired, async (req, res) => {
+    const receiver = await Users.getUser(req.params.receiver)
+    if (receiver) {
+      const chat = await Messages.getChat(req.user.login, receiver.login)
+      console.log('chat', chat)
+      res.send(chat)
+    }
   })
 }
