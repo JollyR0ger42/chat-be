@@ -1,5 +1,5 @@
 const authRequired = require('../middleware/authRequired.js')
-const { User } = require('../controller')
+const { Users } = require('../controller')
 const Token = require('../src/token.js')
 
 
@@ -9,7 +9,7 @@ module.exports = (app) => {
   })
 
   app.post('/signup', async (req, res) => {
-    const user = await User.addUser(req.body.login, req.body.password)
+    const user = await Users.addUser(req.body.login, req.body.password)
     if (user) {
       const token = Token.generate(user)
       if (token) {
@@ -30,8 +30,8 @@ module.exports = (app) => {
     }
   })
 
-  app.get('/chats', authRequired, (req, res) => {
-    res.send(['chat1', 'chat2', 'chat3'])
+  app.get('/users', authRequired, async (req, res) => {
+    res.send(await Users.getAll(req.user.login))
   })
 
   app.get('/logout', (req, res) => {

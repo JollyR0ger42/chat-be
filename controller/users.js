@@ -17,8 +17,17 @@ module.exports = (collection) => {
     return user
   }
 
+  async function getAll(login) {
+    let users
+
+    try { users = await collection.find({ login: {$ne: login} }).toArray() }
+    catch (e) { console.log(e) }
+    return users
+  }
+
   return {
     addUser,
-    getUser
+    getUser,
+    getAll
   }
 }
