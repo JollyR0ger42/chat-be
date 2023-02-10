@@ -20,7 +20,11 @@ module.exports = (collection) => {
   async function getAll(login) {
     let users
 
-    try { users = await collection.find({ login: {$ne: login} }).toArray() }
+    try {
+      users = await collection
+        .find({ login: { $ne: login } }, { projection: { _id: 0, login: 1 } })
+        .toArray()
+    }
     catch (e) { console.log(e) }
     return users
   }
