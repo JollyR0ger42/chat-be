@@ -1,26 +1,14 @@
 const dbConnect = require('../db')
 
-let db, users, messages
+let db, Users, Messages
 
 dbConnect().then((payload) => {
   db = payload
-  users = require('./users.js')(db.collection('users'))
-  messages = require('./messages.js')(db.collection('messages'))
+  Users = require('./users.js')(db.collection('users'))
+  Messages = require('./messages.js')(db.collection('messages'))
 })
 
-function wrapper(func, args) {
-  if (!db) return new Error('DB not connected.')
-  else return func(...args)
-}
-
 module.exports = {
-  Users: {
-    addUser: function (login, password) { return wrapper(users.addUser, arguments) },
-    getUser: function (login) { return wrapper(users.getUser, arguments) },
-    getAll: function (login) { return wrapper(users.getAll, arguments) }
-  },
-  Messages: {
-    addMessage:  function (payload) { return wrapper(messages.addMessage, arguments) },
-    getChat:  function (payload) { return wrapper(messages.getChat, arguments) },
-  }
+  Users: () => Users,
+  Messages: () => Messages
 }

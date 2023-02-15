@@ -8,7 +8,7 @@ module.exports = async (req, res, next) => {
   try {
     user = token.verify(target)
     iat = user.iat
-    user = await Users.getUser(user.login)
+    user = await Users().getUser(user.login)
   }
   catch (e) {
     console.log(e)
