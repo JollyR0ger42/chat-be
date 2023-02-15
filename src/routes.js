@@ -5,7 +5,6 @@ const Token = require('../src/token.js')
 
 module.exports = (app) => {
   app.get('/', (req, res) => {
-    console.log(Users, Messages)
     res.send('Hello World!')
   })
 
