@@ -23,7 +23,6 @@ module.exports = async (req, res, next) => {
   if (timePass >= 24) {
     const newToken = token.generate({ login: user.login })
     res.append('Set-Cookie', `token=${newToken}; HttpOnly;`)
-    res.send()
   }
 
   req.user = { ...user, password: '' }
