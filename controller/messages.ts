@@ -1,8 +1,8 @@
 import { Collection } from 'mongodb';
 import { MessagePayload, Message, ChatMessage } from './types/MessageTypes';
 
-export default function (collection: Collection<Message>) {
-  async function addMessage(payload: MessagePayload): Promise<Message | false> {
+export default function (collection: Collection<Message | MessagePayload>) {
+  async function addMessage(payload: MessagePayload): Promise<any> {
     let newMessage;
 
     try {
@@ -11,15 +11,15 @@ export default function (collection: Collection<Message>) {
       console.log(e);
     }
 
-    if (newMessage) return newMessage.ops[0];
+    if (newMessage) return newMessage;
     else return false;
   }
 
   async function getChat(sender: string, receiver: string): Promise<ChatMessage[] | false> {
-    let chat: Message[];
+    let chat: Message[] = [] ;
 
     try {
-      chat = await collection
+      const result = await collection
         .find({
           $or: [
             { sender, receiver },
@@ -27,11 +27,12 @@ export default function (collection: Collection<Message>) {
           ],
         })
         .toArray();
+      chat = result as Message[];
     } catch (e) {
       console.log(e);
     }
 
-    if (chat) {
+    if (chat.length) {
       return chat.map(({ sender, receiver, message, timestamp }) => ({ sender, receiver, message, timestamp }));
     } else return false;
   }

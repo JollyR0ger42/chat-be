@@ -20,16 +20,16 @@ function default_1(collection) {
                 console.log(e);
             }
             if (newMessage)
-                return newMessage.ops[0];
+                return newMessage;
             else
                 return false;
         });
     }
     function getChat(sender, receiver) {
         return __awaiter(this, void 0, void 0, function* () {
-            let chat;
+            let chat = [];
             try {
-                chat = yield collection
+                const result = yield collection
                     .find({
                     $or: [
                         { sender, receiver },
@@ -37,11 +37,12 @@ function default_1(collection) {
                     ],
                 })
                     .toArray();
+                chat = result;
             }
             catch (e) {
                 console.log(e);
             }
-            if (chat) {
+            if (chat.length) {
                 return chat.map(({ sender, receiver, message, timestamp }) => ({ sender, receiver, message, timestamp }));
             }
             else

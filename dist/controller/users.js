@@ -24,7 +24,7 @@ function default_1(collection) {
             return false;
     });
     const getUser = (login) => __awaiter(this, void 0, void 0, function* () {
-        let user = null;
+        let user;
         try {
             user = yield collection.findOne({ login });
         }
@@ -34,7 +34,7 @@ function default_1(collection) {
         return user;
     });
     const getAll = (login) => __awaiter(this, void 0, void 0, function* () {
-        let users = null;
+        let users;
         try {
             users = yield collection
                 .find({ login: { $ne: login } }, { projection: { _id: 0, login: 1 } })

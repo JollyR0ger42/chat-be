@@ -1,7 +1,7 @@
 import { Response, NextFunction } from 'express';
 import AuthRequest from './types/AuthRequest';
 import Token from '../src/token';
-import { Users } from '../controller';
+import _c from '../controller/index';
 
 const authRequired = async (req: AuthRequest, res: Response, next: NextFunction) => {
   const target: string = req.cookies?.token;
@@ -10,7 +10,7 @@ const authRequired = async (req: AuthRequest, res: Response, next: NextFunction)
   try {
     user = Token.verify(target);
     iat = user.iat;
-    user = await Users().getUser(user.login);
+    user = await _c.Users().getUser(user.login);
   }
   catch (e) {
     console.log(e);

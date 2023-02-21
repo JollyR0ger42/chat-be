@@ -13,7 +13,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 const token_1 = __importDefault(require("../src/token"));
-const controller_1 = require("../controller");
+const index_1 = __importDefault(require("../controller/index"));
 const authRequired = (req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
     var _a;
     const target = (_a = req.cookies) === null || _a === void 0 ? void 0 : _a.token;
@@ -21,7 +21,7 @@ const authRequired = (req, res, next) => __awaiter(void 0, void 0, void 0, funct
     try {
         user = token_1.default.verify(target);
         iat = user.iat;
-        user = yield (0, controller_1.Users)().getUser(user.login);
+        user = yield index_1.default.Users().getUser(user.login);
     }
     catch (e) {
         console.log(e);

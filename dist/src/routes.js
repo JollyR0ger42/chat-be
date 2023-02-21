@@ -14,14 +14,14 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 Object.defineProperty(exports, "__esModule", { value: true });
 const express_1 = __importDefault(require("express"));
 const authRequired_1 = __importDefault(require("../middleware/authRequired"));
-const controller_1 = require("../controller");
+const controller_1 = __importDefault(require("../controller"));
 const token_1 = __importDefault(require("../src/token"));
 const router = express_1.default.Router();
 router.get('/', (req, res) => {
     res.send('Hello World!');
 });
 router.post('/signup', (req, res) => __awaiter(void 0, void 0, void 0, function* () {
-    const user = yield (0, controller_1.Users)().addUser(req.body.login, req.body.password);
+    const user = yield controller_1.default.Users().addUser(req.body.login, req.body.password);
     if (user) {
         const token = token_1.default.generate(user);
         res.cookie('token', token, { httpOnly: true });
@@ -29,7 +29,7 @@ router.post('/signup', (req, res) => __awaiter(void 0, void 0, void 0, function*
     }
 }));
 router.post('/login', (req, res) => __awaiter(void 0, void 0, void 0, function* () {
-    const user = yield (0, controller_1.Users)().getUser(req.body.login);
+    const user = yield controller_1.default.Users().getUser(req.body.login);
     if ((user === null || user === void 0 ? void 0 : user.password) === req.body.password) {
         const token = token_1.default.generate(user);
         res.cookie('token', token, { httpOnly: true });
@@ -40,15 +40,15 @@ router.post('/login', (req, res) => __awaiter(void 0, void 0, void 0, function* 
     }
 }));
 router.get('/users', authRequired_1.default, (req, res) => __awaiter(void 0, void 0, void 0, function* () {
-    res.send(yield (0, controller_1.Users)().getAll(req.user.login));
+    res.send(yield controller_1.default.Users().getAll(req.user.login));
 }));
 router.get('/logout', (req, res) => {
     res.clearCookie('token');
     res.send();
 });
 router.post('/messages', authRequired_1.default, (req, res) => __awaiter(void 0, void 0, void 0, function* () {
-    const receiver = yield (0, controller_1.Users)().getUser(req.body.receiver);
-    (0, controller_1.Messages)().addMessage({
+    const receiver = yield controller_1.default.Users().getUser(req.body.receiver);
+    controller_1.default.Messages().addMessage({
         message: req.body.message,
         receiver: receiver.login,
         sender: req.user.login
@@ -56,9 +56,9 @@ router.post('/messages', authRequired_1.default, (req, res) => __awaiter(void 0,
     res.send();
 }));
 router.get('/messages/:receiver', authRequired_1.default, (req, res) => __awaiter(void 0, void 0, void 0, function* () {
-    const receiver = yield (0, controller_1.Users)().getUser(req.params.receiver);
+    const receiver = yield controller_1.default.Users().getUser(req.params.receiver);
     if (receiver) {
-        const chat = yield (0, controller_1.Messages)().getChat(req.user.login, receiver.login);
+        const chat = yield controller_1.default.Messages().getChat(req.user.login, receiver.login);
         console.log('chat', chat);
         res.send(chat);
     }

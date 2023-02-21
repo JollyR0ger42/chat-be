@@ -3,7 +3,7 @@ import { User, UserPublic, Users } from './types/UserTypes';
 
 export default function (collection: Collection) {
   const addUser = async (login: string, password: string): Promise<UserPublic | false> => {
-    let newUser: User | undefined;
+    let newUser;
 
     try {
       newUser = await collection.insertOne({ login, password });
@@ -15,8 +15,8 @@ export default function (collection: Collection) {
     else return false;
   };
 
-  const getUser = async (login: string): Promise<User | null> => {
-    let user: User | null = null;
+  const getUser = async (login: string): Promise<any> => {
+    let user;
 
     try {
       user = await collection.findOne({ login });
@@ -27,8 +27,8 @@ export default function (collection: Collection) {
     return user;
   };
 
-  const getAll = async (login: string): Promise<UserPublic[] | null> => {
-    let users: UserPublic[] | null = null;
+  const getAll = async (login: string): Promise<any> => {
+    let users;
 
     try {
       users = await collection
